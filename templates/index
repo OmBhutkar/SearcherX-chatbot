@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <meta name="Description" content="SenimSearcherX Bot - Search in a different way" />
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.1.0/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    
+    <title>SenimSearcherX Bot - AI-Powered Search</title>
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg custom-navbar">
+        <div class="container">
+            <div class="navbar-brand d-flex align-items-center">
+                <div class="logo-container me-3">
+                    <div class="logo-shield">
+                        <i class="fas fa-search logo-icon"></i>
+                    </div>
+                </div>
+                <div>
+                    <h4 class="mb-0 brand-title">SenimSearcher<span class="brand-accent">X</span></h4>
+                    <small class="brand-subtitle">AI Powered by Senim Solution LLP</small>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="hero-section">
+        <div class="hero-overlay"></div>
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-8 text-center">
+                    <div class="hero-content">
+                        <div class="company-logo-section mb-4">
+                            <div class="main-logo">
+                                <div class="logo-bg">
+                                    <i class="fas fa-robot"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <h1 class="hero-title">
+                            <span class="gradient-text">SenimSearcherX Bot</span>
+                            <i class="fas fa-brain text-warning ms-2"></i>
+                        </h1>
+                        <p class="hero-subtitle">AI-Powered Intelligent Search Engine</p>
+                        <p class="hero-description">Ask anything and get comprehensive AI-powered answers with smart summaries</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="search-section">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-8">
+                    <div class="search-card">
+                        <form action="/" method="post" class="search-form">
+                            <div class="search-input-group">
+                                <label for="pwd" class="search-label">
+                                    <i class="fas fa-brain me-2 text-primary"></i>
+                                    <strong>ASK TO AI</strong>
+                                </label>
+                                <div class="input-wrapper">
+                                    <input type="text" class="form-control search-input" id="pwd"
+                                        placeholder="Ask anything... e.g., What is artificial intelligence?" name="pswd" required
+                                        value="{% if si %}{{ si }}{% endif %}" />
+                                    <div class="input-icon">
+                                        <i class="fas fa-microchip text-primary"></i>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="search-button-container">
+                                <button type="submit" class="btn search-btn">
+                                    <i class="fas fa-brain me-2"></i>
+                                    <strong>GET AI ANSWER</strong>
+                                    <div class="btn-shine"></div>
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="results-section">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-10">
+                    {% if not sz %}
+                    <div class="no-search-state">
+                        <div class="no-search-content">
+                            <div class="no-search-icon">
+                                <i class="fas fa-brain"></i>
+                            </div>
+                            <h6>Ready to Ask AI</h6>
+                            <p>Ask any question and get intelligent AI-powered answers</p>
+                        </div>
+                    </div>
+                    {% else %}
+                    <div class="results-header">
+                        <h5 class="results-title">
+                            <i class="fas fa-brain me-2"></i>
+                            AI Answer for <span class="search-term">"{{ si }}"</span>
+                        </h5>
+                        <div class="results-meta">
+                            <div class="results-count">{{ sz|length }} Wikipedia sources found</div>
+                            <a href="/download_pdf?keyword={{ si }}" class="download-btn" target="_blank">
+                                <i class="fas fa-file-pdf me-1"></i> Download PDF
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- AI Answer Section -->
+                    {% if ai_answer %}
+                    <div class="ai-answer-card">
+                        <div class="ai-header">
+                            <i class="fas fa-robot me-2"></i>
+                            <h5>AI-Powered Answer</h5>
+                            <span class="ai-badge">Senim AI</span>
+                        </div>
+                        <div class="ai-content">
+                            <p>{{ ai_answer }}</p>
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    <!-- AI Summary Points -->
+                    {% if ai_summary_points %}
+                    <div class="summary-card">
+                        <h5><i class="fas fa-list-ul me-2"></i>Key Summary Points</h5>
+                        <ul class="summary-list">
+                            {% for point in ai_summary_points %}
+                            <li>{{ point }}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                    {% endif %}
+
+                    <!-- Wikipedia Sources -->
+                    <h5 class="results-title mt-5 mb-3"><i class="fab fa-wikipedia-w me-2"></i>Wikipedia Sources</h5>
+                    <div class="results-grid">
+                        {% for title, link, info in sz %}
+                        <div class="result-card">
+                            <div class="result-header">
+                                <div class="result-number">{{ loop.index }}</div>
+                                <div class="result-title-section">
+                                    <h6 class="result-title">
+                                        <a href="{{ link }}" target="_blank" class="title-link">{{ title }}</a>
+                                    </h6>
+                                </div>
+                            </div>
+                            <div class="result-body">
+                                <p class="result-info">{{ info|safe }}</p>
+                                <div class="result-footer">
+                                    <a href="{{ link }}" target="_blank" class="result-link">
+                                        <i class="fas fa-external-link-alt me-1"></i>
+                                        Read More on Wikipedia
+                                    </a>
+                                    <div class="result-actions">
+                                        <button class="btn btn-sm action-btn" onclick="copyToClipboard('{{ link }}')">
+                                            <i class="fas fa-copy"></i>
+                                        </button>
+                                        <button class="btn btn-sm action-btn" onclick="shareResult('{{ title }}', '{{ link }}')">
+                                            <i class="fas fa-share"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    
+                    <!-- Additional References -->
+                    {% if additional_refs %}
+                    <h5 class="results-title mt-5 mb-3"><i class="fas fa-link me-2"></i>Additional References</h5>
+                    <div class="results-grid">
+                        {% for ref in additional_refs %}
+                        <div class="result-card">
+                            <div class="d-flex align-items-center mb-2">
+                                <div class="result-title-section">
+                                    <h6 class="result-title mb-0">
+                                        <a href="{{ ref.url }}" target="_blank" class="title-link">{{ ref.title }}</a>
+                                    </h6>
+                                    <small class="text-muted"><strong>Source:</strong> {{ ref.source }} | <strong>Type:</strong> {{ ref.type }}</small>
+                                </div>
+                            </div>
+                             <div class="result-footer">
+                                <a href="{{ ref.url }}" target="_blank" class="result-link">
+                                    <i class="fas fa-external-link-alt me-1"></i>
+                                    Visit Link
+                                </a>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                    
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="custom-footer">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-md-6">
+                    <div class="footer-brand">
+                        <strong>SenimSearcherX Bot</strong><br>
+                        <small>Made by Om Bhutkar & Ruturaj Deshmukh © 2025</small>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="footer-links justify-content-md-end">
+                        <a href="https://github.com/OmBhutkar" target="_blank" class="footer-link">
+                            <i class="fab fa-github me-1"></i>
+                            GitHub
+                        </a>
+                        <a href="mailto:om.bhutkar@mitaoe.ac.in" class="footer-link">
+                            <i class="fas fa-envelope me-1"></i>
+                            Email
+                        </a>
+                        <a href="tel:+919156194459" class="footer-link">
+                            <i class="fas fa-phone me-1"></i>
+                            Call
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <hr class="my-3" style="border-color: #374151;">
+            <div class="row">
+                <div class="col-12 text-center">
+                    <p class="footer-text mb-0">
+                        <i class="fas fa-brain text-info me-1"></i>
+                         Developed by B.Tech Comp students from MIT Academy of Engineering, Alandi.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.1.0/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        function copyToClipboard(text) {
+            navigator.clipboard.writeText(text).then(() => showNotification('Link copied to clipboard!', 'success'), err => showNotification('Failed to copy link', 'error'));
+        }
+        function shareResult(title, link) {
+            if (navigator.share) {
+                navigator.share({ title: title, url: link }).catch(err => fallbackShare(title, link));
+            } else {
+                fallbackShare(title, link);
+            }
+        }
+        function fallbackShare(title, link) {
+            const shareText = `Check out this Wikipedia article: ${title} - ${link}`;
+            copyToClipboard(shareText);
+        }
+        function showNotification(message, type) {
+            const notification = document.createElement('div');
+            notification.className = `alert alert-${type === 'success' ? 'success' : 'danger'} position-fixed`;
+            notification.style.cssText = 'top: 20px; right: 20px; z-index: 9999; opacity: 0; transition: opacity 0.3s;';
+            notification.innerHTML = `<i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'} me-2"></i> ${message}`;
+            document.body.appendChild(notification);
+            setTimeout(() => notification.style.opacity = '1', 100);
+            setTimeout(() => {
+                notification.style.opacity = '0';
+                setTimeout(() => document.body.removeChild(notification), 300);
+            }, 3000);
+        }
+        document.addEventListener('DOMContentLoaded', () => {
+            const searchInput = document.getElementById('pwd');
+            if (searchInput && !searchInput.value) searchInput.focus();
+        });
+        document.getElementById('pwd').addEventListener('keypress', e => {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                document.querySelector('.search-btn').click();
+            }
+        });
+        document.querySelector('.search-form').addEventListener('submit', () => {
+            const button = document.querySelector('.search-btn');
+            button.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i><strong>AI is thinking...</strong>';
+            button.disabled = true;
+        });
+    </script>
+</body>
+</html>
